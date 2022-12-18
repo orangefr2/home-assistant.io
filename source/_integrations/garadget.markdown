@@ -14,6 +14,7 @@ ha_integration_type: integration
 The `garadget` cover platform lets you control [Garadget](https://www.garadget.com/) garage door futurizers through Home Assistant.
 
 ## Configuration
+#### Existing MQTT configuratios under `cover:` are no longer supported and should be moved to MQTT configuration (https://www.home-assistant.io/integrations/cover.mqtt/#new_format)
 
 To enable Garadget Covers in your installation, add the following to your `configuration.yaml` file:
 
@@ -122,17 +123,26 @@ logbook:
 
 As of firmware release 1.17 the garadget device has native support for MQTT. The options allow the end-user to configure the device in the following ways 'cloud only', 'cloud and MQTT' or 'MQTT only'.
 
+#### Existing MQTT configurations under `cover:` are no longer supported and should be moved to MQTT configuration (https://www.home-assistant.io/integrations/cover.mqtt/#new_format) as per release notes (https://www.home-assistant.io/blog/2022/12/07/release-202212/)
+
 For configuration of the garadget as a MQTT cover:
 
 ```yaml
-cover:
-  - platform: mqtt
-    name: "Garage Door"
-    command_topic: "garadget/device_name/command"
-    state_topic: "garadget/device_name/status"
-    payload_open: "open"
-    payload_close: "close"
-    value_template: "{{ value_json.status }}"
+mqtt:
+  cover:
+    - name: "Garage Door" 
+      command_topic: "garadget/device_name/command"
+      state_topic: "garadget/device_name/status"
+      payload_open: "open"
+      payload_close: "close"
+      payload_stop: "stop"
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+      state_stopped: "stopped"
+      device_class: "Garage" # Provides the correct icons
+      value_template: '{{ value_json.status }}'
 ```
 
 Replace device_name with the name of the device provided when configuring garadget.
